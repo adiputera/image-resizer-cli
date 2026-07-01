@@ -1,0 +1,29 @@
+{
+    "name": "cli-image-resizer",
+    "version": "1.0.0",
+    "description": "CLI Image resizer and converter",
+    "author": {
+        "name": "Yusuf F. Adiputera",
+        "email": "yfa.adiputera@gmail.com"
+    },
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc --watch",
+        "clean": "rimraf dist",
+        "cli": "node dist/cli.js"
+    },
+    "bin": {
+        "image-resizer": "dist/cli.js"
+    },
+    "dependencies": {
+        "heic-decode": "^2.1.0",
+        "sharp": "^0.35.2"
+    },
+    "devDependencies": {
+        "@types/node": "^22.20.0",
+        "rimraf": "^6.1.3",
+        "typescript": "^5.7.0"
+    },
+    "main": "dist/cli.js",
+    "license": "MIT"
+}
