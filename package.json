@@ -1,11 +1,28 @@
 {
-    "name": "cli-image-resizer",
+    "name": "@adiputera/cli-image-resizer",
     "version": "1.0.0",
-    "description": "CLI Image resizer and converter",
+    "description": "CLI Image resizer and converter using sharp and heic-decode for HEIC support",
     "author": {
         "name": "Yusuf F. Adiputera",
         "email": "yfa.adiputera@gmail.com"
     },
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/adiputera/image-resizer-cli"
+    },
+    "keywords": [
+        "image",
+        "resize",
+        "cli",
+        "sharp",
+        "heic",
+        "convert",
+        "webp",
+        "avif"
+    ],
     "scripts": {
         "build": "tsc",
         "watch": "tsc --watch",
