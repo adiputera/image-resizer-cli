@@ -1,6 +1,6 @@
 {
     "name": "@adiputera/cli-image-resizer",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "CLI Image resizer and converter using sharp and heic-decode for HEIC support",
     "author": {
         "name": "Yusuf F. Adiputera",
