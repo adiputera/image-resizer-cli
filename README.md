@@ -8,7 +8,21 @@ It supports resizing, cropping, converting formats (WebP, AVIF, PNG, JPEG), HEIC
 
 - Node.js 18+ or 20+
 
-## Setup
+## Installation
+
+Install globally via npm:
+```bash
+npm install -g @adiputera/cli-image-resizer
+```
+
+Alternatively, run it directly without installing using `npx`:
+```bash
+npx @adiputera/cli-image-resizer -i <input> -o <output> [options]
+```
+
+## Local Development Setup
+
+If you want to run or modify the tool locally:
 
 1. Install dependencies:
 ```bash
@@ -27,15 +41,12 @@ npm link
 
 ## Usage
 
-You can run the tool via npm if in the repository directory:
-```bash
-npm run cli -- -i <input> -o <output> [options]
-```
-
-Or globally if you have installed/linked it:
+Once installed globally or linked, you can run the tool using the `image-resizer` command:
 ```bash
 image-resizer -i <input> -o <output> [options]
 ```
+
+*(Note: If you are running this from the local repository setup, simply replace `image-resizer` with `npm run cli --` in the examples below.)*
 
 ### Options
 
