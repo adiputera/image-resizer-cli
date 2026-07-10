@@ -9,3 +9,4 @@ dist/
 *.avif
 *.HEIC
 test_*
+.vscode/

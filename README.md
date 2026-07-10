@@ -1,8 +1,15 @@
 # CLI Image Resizer
 
-A lightweight CLI tool for image resizing and conversion, built with TypeScript and [Sharp](https://sharp.pixelplumbing.com/).
+A lightweight CLI tool for image resizing and conversion, built with TypeScript, [Sharp](https://sharp.pixelplumbing.com/), and [heic-decode](https://github.com/catdad-experiments/heic-decode).
 
-It supports resizing, cropping, converting formats (WebP, AVIF, PNG, JPEG), HEIC decoding, rotation, grayscale, and blur processing. You can also provide URLs directly as input!
+## Features
+
+- 📸 **HEIC/HEIF Support**: Convert HEIC/HEIF images to standard formats (PNG, JPEG, WebP, AVIF, GIF)
+- 🖼️ **Multiple Formats**: Support for WebP, AVIF, PNG, JPEG, GIF
+- 📏 **Smart Resizing**: Multiple fit strategies (cover, contain, fill, inside, outside)
+- 🎨 **Image Effects**: Rotation, blur, grayscale, and cropping
+- 🌐 **URL Support**: Download and process images directly from URLs
+- ⚡ **Fast & Efficient**: Powered by Sharp's high-performance image processing
 
 ## Prerequisites
 
@@ -72,6 +79,16 @@ image-resizer -i <input> -o <output> [options]
 Resize an image to 800x600 pixels.
 ```bash
 image-resizer -i photo.jpg -o photo-resized.jpg -w 800 -h 600
+```
+
+**Convert HEIC to Standard Format**
+Convert HEIC/HEIF images to PNG, JPEG, or WebP.
+```bash
+# Convert HEIC to JPEG
+image-resizer -i IMG_1234.HEIC -o output.jpg -f jpg -q 90
+
+# Convert HEIC to WebP with resize
+image-resizer -i IMG_1234.HEIC -o output.webp -f webp -w 1920 -q 85
 ```
 
 **Convert Format & Adjust Quality**

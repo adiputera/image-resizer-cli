@@ -4,7 +4,7 @@ import { parseArgs } from 'util';
 import fs from 'fs';
 import path from 'path';
 import { Readable } from 'stream';
-import * as heicDecode from 'heic-decode';
+import heicDecode from 'heic-decode';
 import sharp from 'sharp';
 import transformationHandler from './libs/transformationHandler';
 import { ResizeOptions, ActionType, ImageFormat, GravityType } from './types';
@@ -130,22 +130,69 @@ Options:
         }
 
         // Try HEIC decode if possible
+        let isHeic = false;
         try {
-            const { width, height, data } = await heicDecode.decode({ buffer: inputBuffer });
+            const { width, height, data } = await heicDecode({ buffer: inputBuffer });
+            isHeic = true;
             const rgbaBuffer = Buffer.from(data);
-            const sharpImage = sharp(rgbaBuffer, { raw: { width, height, channels: 4 } });
+            let sharpImage = sharp(rgbaBuffer, { raw: { width, height, channels: 4 } });
             
+            // Apply transformations in order
+            if (options.rotate !== undefined) {
+                sharpImage = sharpImage.rotate(options.rotate === 'auto' ? undefined : (options.rotate as number));
+            }
+            
+            if (options.blur !== undefined) {
+                sharpImage = sharpImage.blur(options.blur);
+            }
+            
+            if (options.grayscale) {
+                sharpImage = sharpImage.grayscale();
+            }
+            
+            // Apply resize with options
+            if (options.width || options.height) {
+                const resizeOpts: any = {};
+                if (options.width) resizeOpts.width = options.width;
+                if (options.height) resizeOpts.height = options.height;
+                if (options.fit) resizeOpts.fit = options.fit;
+                if (options.withoutEnlargement !== undefined) resizeOpts.withoutEnlargement = options.withoutEnlargement;
+                sharpImage = sharpImage.resize(resizeOpts);
+            }
+            
+            if (options.action === 'crop') {
+                sharpImage = sharpImage.trim();
+            }
+            
+            // Apply format and quality
             const format = options.format === 'jpg' ? 'jpeg' : options.format;
-            const transformedBuffer = await sharpImage.toFormat(format as any).toBuffer();
-            inputBuffer = transformedBuffer;
+            if (format === 'webp') {
+                sharpImage = sharpImage.webp({ quality: options.quality });
+            } else if (format === 'avif') {
+                sharpImage = sharpImage.avif({ quality: options.quality });
+            } else if (format === 'gif') {
+                sharpImage = sharpImage.gif();
+            } else if (format === 'jpeg') {
+                sharpImage = sharpImage.jpeg({ quality: options.quality, progressive: true });
+            } else {
+                sharpImage = sharpImage.png({ quality: options.quality });
+            }
+            
+            // Write directly to output for HEIC files
+            await sharpImage.toFile(path.resolve(process.cwd(), output));
+            console.log(`Done! Output image generated to ${output}`);
         } catch (err) {
-            // Not a HEIC image, continue with original buffer
+            // Not a HEIC image, continue with original buffer through transform pipeline
+            if (!isHeic) {
+                const readableImageBuffer = new Readable();
+                readableImageBuffer.push(inputBuffer);
+                readableImageBuffer.push(null);
+                readableImageBuffer.pipe(transform).pipe(writeStream);
+            } else {
+                // Was HEIC but processing failed
+                throw err;
+            }
         }
-
-        const readableImageBuffer = new Readable();
-        readableImageBuffer.push(inputBuffer);
-        readableImageBuffer.push(null);
-        readableImageBuffer.pipe(transform).pipe(writeStream);
         
     } catch (error) {
         console.error('Error processing image. Possibly not an image? Detailed log:');
